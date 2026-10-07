@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: demo-app-alerts
+  namespace: demo
+spec:
+  groups:
+    - name: demo-app
+      rules:
+        - alert: DemoAppDown
+          # up==0 catches a failing scrape; absent() catches "no pods at all"
+          expr: absent(up{job="demo-app"} == 1)
+          for: 30s
+          labels: {severity: critical}
+          annotations:
+            summary: "No healthy demo-app target in namespace demo"
+        - alert: DemoAppHighMemory
+          expr: sum by (pod) (container_memory_working_set_bytes{namespace="demo",container="app"}) > 50 * 1024 * 1024
+          for: 1m
+          labels: {severity: warning}
+          annotations:
+            summary: "{{ $labels.pod }} uses more than 50 MiB"
