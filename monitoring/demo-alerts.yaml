@@ -15,7 +15,7 @@ spec:
           annotations:
             summary: "No healthy demo-app target in namespace demo"
         - alert: DemoAppHighMemory
-          expr: sum by (pod) (container_memory_working_set_bytes{namespace="demo",container="app"}) > 50 * 1024 * 1024
+          expr: max by (pod) (container_memory_working_set_bytes{namespace="demo",pod!=""}) > 50 * 1024 * 1024
           for: 1m
           labels: {severity: warning}
           annotations:

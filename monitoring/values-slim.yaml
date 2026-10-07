@@ -19,8 +19,9 @@ grafana:
   adminPassword: demo-password-not-real
   persistence: {enabled: false}
   resources:
-    requests: {cpu: 50m, memory: 128Mi}
-    limits: {memory: 256Mi}
+    requests: {cpu: 50m, memory: 256Mi}
+    # 256Mi was OOMKilled on startup (Grafana 12 + sidecars); 512Mi is stable
+    limits: {memory: 512Mi}
 prometheusOperator:
   resources:
     requests: {cpu: 50m, memory: 64Mi}
